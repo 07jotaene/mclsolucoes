@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCL Soluções</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>MCL Soluções</h1>
+        </div>
+        <div class="search-cart">
+            <div class="search">
+                <input type="text" id="search-input" placeholder="Buscar produtos...">
+                <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="cart" onclick="openCartModal()">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#" onclick="filterByCategory('todos')">Home</a></li>
+            <li><a href="#" onclick="filterByCategory('laminados')">Laminados</a></li>
+            <li><a href="#" onclick="filterByCategory('vinilicos')">Vinílicos</a></li>
+            <li><a href="#" onclick="filterByCategory('rodapes')">Rodapés</a></li>
+            <li><a href="#" onclick="filterByCategory('instalacao')">Instalações</a></li>
+        </ul>
+    </nav>
+
+    <!-- Filtros por Categoria -->
+    <div class="filter-section">
+        <h2>Filtrar por Categoria</h2>
+        <div class="category-filters">
+            <button class="filter-btn active" data-category="todos" onclick="filterByCategory('todos')">
+                <i class="fas fa-home"></i> Todos os Produtos
+            </button>
+            <button class="filter-btn" data-category="laminados" onclick="filterByCategory('laminados')">
+                <i class="fas fa-border-style"></i> Laminados
+            </button>
+            <button class="filter-btn" data-category="vinilicos" onclick="filterByCategory('vinilicos')">
+                <i class="fas fa-cube"></i> Vinílicos
+            </button>
+            <button class="filter-btn" data-category="rodapes" onclick="filterByCategory('rodapes')">
+                <i class="fas fa-ruler-horizontal"></i> Rodapés
+            </button>
+            <button class="filter-btn" data-category="instalacao" onclick="filterByCategory('instalacao')">
+                <i class="fas fa-wrench"></i> Instalação
+            </button>
+        </div>
+    </div>
+
+    <main>
+        <div class="banner">
+            <h2>Promoções Imperdíveis</h2>
+            <p>Até 30% de desconto em produtos selecionados</p>
+        </div>
+
+        <div class="current-filter">
+            <span id="current-filter-text">Exibindo: Todos os Produtos</span>
+            <span id="products-count">(0 produtos encontrados)</span>
+        </div>
+
+        <div class="products-container" id="products">
+            <!-- Produtos serão carregados via JavaScript -->
+        </div>
+    </main>
+
+    <!-- Modal do Carrinho -->
+    <div class="cart-modal" id="cart-modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('cart-modal')">&times;</span>
+            <h2>Seu Carrinho</h2>
+            <div class="cart-items" id="cart-items">
+                <!-- Itens do carrinho serão adicionados aqui -->
+            </div>
+            <div class="cart-total">
+                <p>Total: <span id="cart-total">R$ 0,00</span></p>
+                <button id="checkout-btn" onclick="openCheckoutModal()">Finalizar Orçamento</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Checkout -->
+    <div class="checkout-modal" id="checkout-modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('checkout-modal')">&times;</span>
+            <h2>Finalizar Orçamento</h2>
+            <form id="checkout-form">
+                <div class="form-group">
+                    <label for="name">Nome Completo</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Endereço</label>
+                    <input type="text" id="address" required>
+                </div>
+                <div class="form-group">
+                    <label for="payment">Forma de Pagamento</label>
+                    <select id="payment" required>
+                        <option value="">Selecione...</option>
+                        <option value="credit">Cartão de Crédito</option>
+                        <option value="debit">Cartão de Débito</option>
+                        <option value="pix">PIX</option>
+                        <option value="boleto">Boleto Bancário</option>
+                    </select>
+                </div>
+                <button type="submit">Confirmar Orçamento</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Sobre Nós</h3>
+                <p>A Mcl Soluções é a maior loja de pisos do Brasil, com os melhores preços e qualidade.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contato</h3>
+                <p>Email: Mcl.gs@gmail.com</p>
+                <p>Telefone: (21) 98577-8195</p>
+            </div>
+            <div class="footer-section">
+                <h3>Redes Sociais</h3>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/mclsolucoes?locale=pt_BR"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/mclsolucoes"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Super Loja. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <style>
+        /* Reset e Estilos Gerais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+        }
+        
+        .search-cart {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .search {
+            display: flex;
+        }
+        
+        .search input {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            width: 300px;
+        }
+        
+        .search button {
+            padding: 0.5rem 1rem;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+        
+        .cart {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+        
+        #cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: #34495e;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            padding: 1rem 2rem;
+        }
+        
+        nav ul li {
+            margin-right: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        nav ul li a:hover {
+            color: #e74c3c;
+        }
+
+        /* Filtros por Categoria */
+        .filter-section {
+            background-color: white;
+            padding: 1.5rem 2rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .filter-section h2 {
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .category-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #e74c3c;
+            background-color: white;
+            color: #e74c3c;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover {
+            background-color: #e74c3c;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .current-filter {
+            padding: 1rem 2rem;
+            background-color: #ecf0f1;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #current-filter-text {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        #products-count {
+            color: #7f8c8d;
+        }
+        
+        /* Banner */
+        .banner {
+            background-color: #e74c3c;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .banner h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Products */
+        .products-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 0 2rem;
+            margin-bottom: 2rem;
+            min-height: 300px;
+        }
+
+        .no-products {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            color: #7f8c8d;
+            font-size: 1.2rem;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 0.25rem 0.5rem;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 1;
+        }
+
+        .product-card[data-category="laminados"]::before {
+            content: "Laminados";
+            background-color: #3498db;
+        }
+
+        .product-card[data-category="vinilicos"]::before {
+            content: "Vinílicos";
+            background-color: #27ae60;
+        }
+
+        .product-card[data-category="rodapes"]::before {
+            content: "Rodapés";
+            background-color: #f39c12;
+        }
+
+        .product-card[data-category="instalacoes"]::before {
+            content: "Instalações";
+            background-color: #9b59b6;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .product-image {
+            height: 200px;
+            overflow: hidden;
+            background-color: #ecf0f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .product-image i {
+            font-size: 4rem;
+            color: #bdc3c7;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+        
+        .product-info {
+            padding: 1rem;
+        }
+        
+        .product-info h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .product-price {
+            font-weight: bold;
+            color: #e74c3c;
+            font-size: 1.2rem;
+            margin: 0.5rem 0;
+        }
+        
+        .product-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .add-to-cart {
+            width: 100%;
+            padding: 0.5rem;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .add-to-cart:hover {
+            background-color: #e74c3c;
+        }
+        
+        /* Modal */
+        .cart-modal, .checkout-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .cart-items {
+            margin: 1rem 0;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-item-info {
+            flex-grow: 1;
+        }
+        
+        .cart-item-price {
+            font-weight: bold;
+        }
+        
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .cart-item-quantity button {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .cart-total {
+            text-align: right;
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        #checkout-btn {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        /* Checkout Form */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 2rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid #34495e;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: opacity 0.5s;
+        }
+        
+        .fade-out {
+            opacity: 0;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .search input {
+                width: 200px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+            }
+
+            .category-filters {
+                justify-content: center;
+            }
+
+            .filter-btn {
+                font-size: 0.9rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .current-filter {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .products-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+            }
+
+            .filter-section {
+                padding: 1rem;
+            }
+
+            .category-filters {
+                gap: 0.5rem;
+            }
+
+            .filter-btn {
+                font-size: 0.8rem;
+                padding: 0.5rem 0.75rem;
+            }
+        }
+    </style>
+
+    <script>
+        // Dados dos produtos organizados por categoria
+        const products = [
+            // Laminados
+            {
+                id: 1,
+                name: "Piso Laminado Quick-Step Vision Carvalho Vitoriano",
+                price: 139.99,
+                description: "Resistente a água por 100 horas",
+                category: "laminados",
+                image: "images/Piso Laminado Quick-Step Vision Carvalho Vitoriano.jpg"
+            },
+            {
+                id: 2,
+                name: "Piso Laminado Eucafloor Prime Fresno Decape New",
+                price: 99.99,
+                description: "O iPhone mais poderoso com tela ProMotion de 120Hz.",
+                category: "laminados",
+                image: "images/Piso Laminado Eucafloor Prime Fresno Decape New.jpeg"
+            },
+            {
+                id: 3,
+                name: "piso laminado Eucafloor Prime CLICK - Carvalho Rústico",
+                price: 199.99,
+                description: "Notebook premium com tela 4K e processador Intel Core i9.",
+                category: "laminados",
+                image: "images/piso laminado Eucafloor Prime CLICK - Carvalho Rústico.jpg"
+            },
+            {
+                id: 4,
+                name: "Gran Elegance Belmonte",
+                price: 4999.99,
+                description: "O maior piso de réguas largas do Brasil.",
+                category: "laminados",
+                image: "images/gran elegance belmonte.jpeg"
+            },
+            {
+                id: 5,
+                name: "Max Elegance Claire Oak",
+                price: 1499.99,
+                description: "Mais sofisticação para seu ambiente.",
+                category: "laminados",
+                image: "images/max elegance claire oak.jpeg"
+            },
+            {
+                id: 6,
+                name: "New Evidence Click Moka",
+                price: 4499.99,
+                description: "Tamanho único para uma decoração exclusiva.",
+                category: "laminados",
+                image: "images/new evidence click moka.jpeg"
+            },
+             {
+                id: 7,
+                name: "Square Mármore Imperador",
+                price: 15999.99,
+                description: "O único piso laminado em formato quadrado do mercado.",
+                category: "laminados",
+                image: "images/square mármore imperador.jpeg"
+            },
+             {
+                id: 8,
+                name: "Prime Click Castanho Terracota",
+                price: 3499.99,
+                description: "Todos os padrões dísponiveis no sistema click.",
+                category: "laminados",
+                image: "images/prime click castanho terracota.jpeg"
+            },
+             {
+                id: 9,
+                name: "Piso laminado Eucafloor Prime Click - Kalahari",
+                price: 2499.99,
+                description: "Estilo, a tradicional linha de rodapés em MDF, muito prática e rápida de instalar, além de ter a função passa-cabo.",
+                category: "laminados",
+                image: "images/Piso laminado Eucafloor Prime Click - Kalahari.jpg"
+            },
+             {
+                id: 10,
+                name: "Piso laminado clicado Durafloor Nature Nagoya",
+                price: 299.99,
+                description: "Estilo, a tradicional linha de rodapés em MDF, muito prática e rápida de instalar, além de ter a função passa-cabo.",
+                category: "laminados",
+                image: "images/Piso laminado clicado Durafloor Nature Nagoya.webp"
+            },
+             {
+                id: 11,
+                name: "Piso Taos Urban - Durafloor",
+                price: 299.99,
+                description: "Estilo, a tradicional linha de rodapés em MDF, muito prática e rápida de instalar, além de ter a função passa-cabo.",
+                category: "laminados",
+                image: "images/Piso Taos Urban - Durafloor.jpg"
+            },
+             {
+                id: 12,
+                name: "Piso Laminado Durafloor Petra City",
+                price: 299.99,
+                description: ".",
+                category: "laminados",
+                image: "images/Piso Laminado Durafloor Petra City.jpg"
+            },
+             {
+                id: 13,
+                name: "Piso Laminado Unique Ultra Durafloor Toledo",
+                price: 399.99,
+                description: "Estilo, a tradicional linha de rodapés em MDF, muito prática e rápida de instalar, além de ter a função passa-cabo.",
+                category: "laminados",
+                image: "images/Piso Laminado Unique Ultra Durafloor Toledo.jpg"
+            },
+             {
+                id: 14,
+                name: "Piso laminado Eucafloor New Evidênce Veneto",
+                price: 299.99,
+                description: "Piso ideal para ambientes comerciais, (lojas, escritórios e salas de aula).",
+                category: "laminados",
+                image: "images/Piso Laminado Eucafloor New Evidênce Veneto.jpg"
+            },
+             {
+                id: 15,
+                name: "Piso Laminado Eucafloor Prime Cappuccino",
+                price: 299.99,
+                description: "Melhor custo-benefício para ambientes residênciais e comerciais.",
+                category: "laminados",
+                image: "images/piso Laminado Eucafloor Prime Cappuccino.jpg"
+            },
+             {
+                id: 16,
+                name: "Piso laminado Eucafloor prime Noce Oro",
+                price: 499.99,
+                description: "Melhor custo-benefício para ambientes residênciais e comerciais.",
+                category: "laminados",
+                image: "images/Piso laminado Eucafloor prime Noce Oro.jpg"
+            },
+             {
+                id: 17,
+                name: "Piso Laminado Eucafloor PRIME Carvalho",
+                price: 699.99,
+                description: "Melhor custo-benefício para ambientes residênciais e comerciais.",
+                category: "laminados",
+                image: "images/Piso laminado Eucafloor PRIME Carvalho.jpg"
+            },
+             {
+                id: 18,
+                name: "Piso Laminado Eucafloor Prime Carvalho Maiorca",
+                price: 1999.99,
+                description: "Melhor custo-benefício para ambientes residênciais e comerciais.",
+                category: "laminados",
+                image: "images/Piso laminado Eucafloor Prime Carvalho Maiorca.jpg"
+            },
+             {
+                id: 19,
+                name: "Piso laminado Eucafloor Prime Click Andorra New",
+                price: 5999.99,
+                description: "Melhor custo-benefício para ambientes residênciais e comerciais.",
+                category: "laminados",
+                image: "images/Piso laminado Eucafloor Prime Click Andorra New.jpg"
+            },
+            
+            {
+                id: 20,
+                name: "Piso laminado Quick Step Floorest PREMIERE Malta 1067",
+                price: 99.99,
+                description: "O iPhone mais poderoso com tela ProMotion de 120Hz.",
+                category: "laminados",
+                image: "images/Piso laminado Quick Step Floorest PREMIERE Malta 1067.jpg"
+            },
+         {
+                id: 21,
+                name: "Piso laminado Durafloor New Way Carvalho York",
+                price: 199.99,
+                description: "Notebook premium com tela 4K e processador Intel Core i9.",
+                category: "laminados",
+                image: "images/Piso laminado Durafloor New Way Carvalho York.jpg"
+        },
+            {
+                id: 22,
+                name: "Piso Laminado Eucafloor Prime Click - Decapê",
+                price: 2499.99,
+                description: "Prepare cafés especiais com um toque.",
+                category: "laminados",
+                image: "images/Piso Laminado Eucafloor Prime Click - Decapê.jpg"
+            },
+            {
+                id: 23,
+                name: "Piso laminado Eucafloor Prime Click Carvalho Coimbra",
+                price: 599.99,
+                description: "Kit com 5 panelas antiaderentes de alta qualidade.",
+                category: "laminados",
+                image: "images/Piso laminado Eucafloor Prime Click Carvalho Coimbra.jpg"
+            },
+            {
+                id: 24,
+                name: "Piso laminado Eucafloor Prime Click Carvalho canela",
+                price: 599.99,
+                description: "Fritadeira elétrica sem óleo com capacidade para 3,5L.",
+                category: "laminados",
+                image: "images/Piso laminado Eucafloor Prime Click Carvalho canela.jpg"
+            },
+             {
+                id: 25,
+                name: "Piso laminado Eucafloor Prime Click Italian Noce",
+                price: 3999.99,
+                description: "Geladeira duplex com freezer inferior.",
+                category: "laminados",
+                image: "images/Piso laminado Eucafloor Prime Click Italian Noce.jpg"
+            },
+             {
+                id: 26,
+                name: "Piso Laminado Eucafloor prime Lâmina Amêndoa",
+                price: 1999.99,
+                description: "Fogao com acendimento automatico e forno eletrico.",
+                category: "laminados",
+                image: "images/Piso Laminado Eucafloor prime Lâmina Amêndoa.jpg"
+            },
+             {
+                id: 27,
+                name: "Piso laminado Eucafloor Prime Click Nogueira Malaga",
+                price: 2499.99,
+                description: "Máquina de lavar com capacidade para 12kg.",
+                category: "laminados",
+                image: "images/Piso laminado Eucafloor Prime Click Nogueira Malaga.jpg"
+            },
+             {
+                id: 28,
+                name: "Piso Laminado Eucafloor Prime Click Nogueira Natural",
+                price: 899.99,
+                description: "Micro-ondas com grill e 31L de capacidade.",
+                category: "laminados",
+                image: "images/Piso laminado eucafloor prime click nogueira natural.jpg"
+            },
+             { 
+                id: 29,
+                name: "Piso Laminado Eucafloor Prime Elmo Natural",
+                price: 299.99,
+                description: "Ventilador de mesa com 3 velocidades.",
+                category: "laminados",
+                image: "images/Piso laminado Eucafloor Prime Elmo Natural.jpg"
+            },
+             {
+                id: 30,
+                name: "Piso laminado Eucafloor Prime Valência",
+                price: 199.99,
+                description: "Liquidificador com 500W de potência.",
+                category: "laminados",
+                image: "images/Piso laminado Eucafloor Prime Valência.jpg"
+            },
+              {
+                id: 31,
+                name: "Piso Laminado Eucafloor Prime Click Cacau Rodapé Cor Do Piso",
+                price: 149.99,
+                description: "Ferro a vapor com sistema anti-calcário.",
+                category: "laminados",
+                image: "images/Piso laminado eucafloor prime click cacau rodape cor do piso.jpg"
+            },
+            
+            
+
+            // Rodapés
+             {
+                id: 31,
+                name: "Rodapé Estilo Cordão",
+                price: 2499.99,
+                description: "Estilo, a tradicional linha de rodapés em MDF, muito prática e rápida de instalar, além de ter a função passa-cabo.",
+                category: "rodapes",
+                image: "images/rodape estilo cordao.jpeg"
+            },
+             {
+                id: 32,
+                name: "Rodapé Estilo 50 mm ",
+                price: 299.99,
+                description: "Estilo, a tradicional linha de rodapés em MDF, muito prática e rápida de instalar, além de ter a função passa-cabo.",
+                category: "rodapes",
+                image: "images/rodape estilo 50mm.jpeg"
+            },
+             {
+                id: 33,
+                name: "Rodapé Estilo 70 mm",
+                price: 299.99,
+                description: "Estilo, a tradicional linha de rodapés em MDF, muito prática e rápida de instalar, além de ter a função passa-cabo.",
+                category: "rodapes",
+                image: "images/rodape estilo 70mm.jpg"
+            },
+             {
+                id: 34,
+                name: "Rodapé Estilo 100 mm Sem Friso",
+                price: 299.99,
+                description: "Estilo, a tradicional linha de rodapés em MDF, muito prática e rápida de instalar, além de ter a função passa-cabo.",
+                category: "rodapes",
+                image: "images/rodape estilo 100mm sem friso.jpg"
+            },
+             {
+                id: 35,
+                name: "Rodapé Estilo 100 mm Com Friso",
+                price: 399.99,
+                description: "Estilo, a tradicional linha de rodapés em MDF, muito prática e rápida de instalar, além de ter a função passa-cabo.",
+                category: "rodapes",
+                image: "images/rodape estilo 100mm.jpg"
+            },
+             {
+                id: 36,
+                name: "Piso vinílico tarkett Injoy Papoula",
+                price: 569.99,
+                description: "Chuteira Umbro Speciali III Pro Campo Dourada",
+                category: "vinilicos",
+                image: "images/Piso vinílico tarkett Injoy Papoula.jpg"
+            },
+             {
+                id: 37,
+                name: "Óculos de Ciclismo ",
+                price: 179.99,
+                description: "Óculos De Ciclismo Esportivo Espelhado Proteção Uv 400 Bike",
+                category: "esportes",
+                image: "images/ciclista.webp"
+            },
+             {
+                id: 38,
+                name: "Bola de Futebol Adidas ",
+                price: 169.99,
+                description: "Bola Futebol De Campo Da Copa 2022 Cor Branco",
+                category: "esportes",
+                image: "images/fut.webp"
+            },
+         {
+                id: 39,
+                name: "Piso vinílico Finottato Imponente Chocolate Suíço",
+                price: 199.99,
+                description: "Notebook premium com tela 4K e processador Intel Core i9.",
+                category: "vinilicos",
+                image: "images/Piso vinílico Finottato Imponente Chocolate Suíço.jpg"
+        },
+            {
+                id: 40,
+                name: "Piso vinílico Vinilforte (cinza) granada",
+                price: 99.99,
+                description: "O iPhone mais poderoso com tela ProMotion de 120Hz.",
+                category: "vinilicos",
+                image: "images/Piso vinílico Vinilforte (cinza) granada.jpg"
+            },
+
+            // Moda
+            {
+                id: 41,
+                name: "Jaqueta de Couro Premium",
+                price: 899.99,
+                description: "Jaqueta de couro legítimo com design moderno.",
+                category: "moda",
+                image: "images/jaqueta.webp"
+            },
+             {
+                id: 42,
+                name: "Relógio Smartwatch",
+                price: 1199.99,
+                description: "Smartwatch com monitor cardíaco e GPS.",
+                category: "moda",
+                image: "images/relogio.webp"
+            },
+             {
+                id: 43,
+                name: "Bolsa Feminina Designer",
+                price: 599.99,
+                description: "Bolsa elegante em couro sintético de alta qualidade.",
+                category: "moda",
+                image: "images/bolsa.webp"
+            },
+             {
+                id: 44,
+                name: "Óculos de Sol Ray-Ban",
+                price: 349.99,
+                description: "Óculos clássicos com proteção UV400.",
+                category: "moda",
+                image: "images/oculos.webp"
+            },
+             {
+                id: 45,
+                name: "Calça Cargo ",
+                price: 139.99,
+                description: "Calça cargo jeans clara",
+                category: "moda",
+                image: "images/calça.jpg"
+            },
+             {
+                id: 46,
+                name: "Pantufa ",
+                price: 119.99,
+                description: "Pantufa Pam Pluto Amarelo Para Adultos Unissex",
+                category: "moda",
+                image: "images/pantufa.webp"
+            },
+             {
+                 id: 47,
+                name: "Casaco Flamengo ",
+                price: 269.99,
+                description: "Casaco Corta Vento do Flamengo Preto Masculino",
+                category: "moda",
+                image: "images/casaco.webp"
+            },
+             {
+                 id: 48,
+                name: "Camisa da Seleção Brasileira ",
+                price: 349.99,
+                description: "Camisa Nike Brasil I 2024/25 Torcedor Pro Masculina",
+                category: "moda",
+                image: "images/camisa.webp"
+            },
+             {
+                 id: 49,
+                name: "Boné de Aba Reta",
+                price: 89.99,
+                description: "Boné Masculino Five Panel Aba Reta Modelo Aberto Strapback Fitao Preto Anth co Originals",
+                category: "moda",
+                image: "images/bone.jpg"
+            },
+             {
+                 id: 50,
+                name: "Touca Masculina",
+                price: 49.99,
+                description: "Touca Masculina de Lã Forrada Para Frio Cinza",
+                category: "moda",
+                image: "images/touca.webp"
+            },
+             {
+                 id: 51,
+                name: "Cachecol Unissex",
+                price: 79.99,
+                description: "Cachecol Red Merino Wool Mix Cable Knitted Scarf",
+                category: "moda",
+                image: "images/cachecol.jpg"
+            },
+             {
+                 id: 52,
+                name: "Tênis Redley Preto",
+                price: 79.99,
+                description: "Tênis Redley Original Ir10 Masculino Feminino Preto",
+                category: "moda",
+                image: "images/sapato.webp"
+            },
+        ];
+
+        // Carrinho de compras
+        let cart = [];
+        let currentFilter = 'todos';
+        let filteredProducts = [...products];
+
+        // Elementos do DOM
+        const productsContainer = document.getElementById('products');
+        const cartModal = document.getElementById('cart-modal');
+        const checkoutModal = document.getElementById('checkout-modal');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartCount = document.getElementById('cart-count');
+        const cartTotal = document.getElementById('cart-total');
+        const checkoutForm = document.getElementById('checkout-form');
+        const currentFilterText = document.getElementById('current-filter-text');
+        const productsCount = document.getElementById('products-count');
+        const searchInput = document.getElementById('search-input');
+
+        // Mapeamento de categorias para nomes amigáveis
+        const categoryNames = {
+            'todos': 'Todos os Produtos',
+            'laminados': 'Laminados',
+            'vinilicos': 'Vinílicos',
+            'rodapes': 'Rodapés',
+            'instalacao': 'Instalações'
+        };
+
+        // Ícones por categoria
+        const categoryIcons = {
+            'laminados': 'fas fa-mobile-alt',
+            'vinilicos': 'fas fa-home',
+            'rodapes': 'fas fa-running',
+            'instalacao': 'fas fa-tshirt'
+        };
+
+        // Função para filtrar produtos por categoria
+        function filterByCategory(category) {
+            currentFilter = category;
+            
+            // Atualiza botões de filtro
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-category="${category}"]`).classList.add('active');
+
+            // Filtra produtos
+            if (category === 'todos') {
+                filteredProducts = [...products];
+            } else {
+                filteredProducts = products.filter(product => product.category === category);
+            }
+
+            // Atualiza texto do filtro atual
+            currentFilterText.textContent = `Exibindo: ${categoryNames[category]}`;
+            
+            // Renderiza produtos filtrados
+            renderProducts();
+        }
+
+        // Função para buscar produtos
+        function searchProducts() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                filterByCategory(currentFilter);
+                return;
+            }
+
+            // Filtra por categoria atual e termo de busca
+            let baseProducts = currentFilter === 'todos' ? products : products.filter(p => p.category === currentFilter);
+            
+            filteredProducts = baseProducts.filter(product => 
+                product.name.toLowerCase().includes(searchTerm) ||
+                product.description.toLowerCase().includes(searchTerm)
+            );
+
+            currentFilterText.textContent = `Exibindo: Resultados da busca "${searchTerm}" em ${categoryNames[currentFilter]}`;
+            renderProducts();
+        }
+
+        // Event listener para busca em tempo real
+        searchInput.addEventListener('input', searchProducts);
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchProducts();
+            }
+        });
+
+        // Função para renderizar os produtos
+        function renderProducts() {
+            productsContainer.innerHTML = '';
+            
+            // Atualiza contador de produtos
+            productsCount.textContent = `(${filteredProducts.length} produtos encontrados)`;
+
+            if (filteredProducts.length === 0) {
+                const noProducts = document.createElement('div');
+                noProducts.className = 'no-products';
+                noProducts.innerHTML = `
+                    <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; color: #bdc3c7;"></i>
+                    <p>Nenhum produto encontrado para esta categoria ou busca.</p>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem;">Tente buscar por outro termo ou escolha uma categoria diferente.</p>
+                `;
+                productsContainer.appendChild(noProducts);
+                return;
+            }
+            
+            filteredProducts.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.setAttribute('data-category', product.category);
+                
+                productCard.innerHTML = `
+                    <div class="product-image">
+                        ${product.image ? 
+                            `<img src="${product.image}" alt="${product.name}">` : 
+                            `<i class="${categoryIcons[product.category] || 'fas fa-box'}"></i>`
+                        }
+                    </div>
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p class="product-price">R$ ${product.price.toFixed(2).replace('.', ',')}</p>
+                        <p class="product-description">${product.description}</p>
+                        <button class="add-to-cart" onclick="addToCart(${product.id})">
+                            <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho
+                        </button>
+                    </div>
+                `;
+                
+                productsContainer.appendChild(productCard);
+            });
+        }
+
+        // Função para adicionar ao carrinho
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    ...product,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            showNotification(`${product.name} adicionado ao carrinho!`);
+        }
+
+        // Função para atualizar o carrinho
+        function updateCart() {
+            // Atualiza contador
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            
+            // Atualiza total
+            const totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            cartTotal.textContent = `R$ ${totalPrice.toFixed(2).replace('.', ',')}`;
+            
+            // Atualiza itens no modal
+            if (cartItemsContainer) {
+                cartItemsContainer.innerHTML = '';
+                
+                if (cart.length === 0) {
+                    cartItemsContainer.innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: #7f8c8d;">
+                            <i class="fas fa-shopping-cart" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                            <p>Seu carrinho está vazio.</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Adicione alguns produtos para começar!</p>
+                        </div>
+                    `;
+                } else {
+                    cart.forEach(item => {
+                        const cartItem = document.createElement('div');
+                        cartItem.className = 'cart-item';
+                        
+                        cartItem.innerHTML = `
+                            <div style="display: flex; align-items: center;">
+                                <div style="width: 50px; height: 50px; background-color: #ecf0f1; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin-right: 1rem;">
+                                    <i class="${categoryIcons[item.category] || 'fas fa-box'}" style="color: #bdc3c7;"></i>
+                                </div>
+                                <div class="cart-item-info">
+                                    <h4>${item.name}</h4>
+                                    <p class="cart-item-price">R$ ${item.price.toFixed(2).replace('.', ',')}</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div class="cart-item-quantity">
+                                    <button onclick="decreaseQuantity(${item.id})">-</button>
+                                    <span>${item.quantity}</span>
+                                    <button onclick="increaseQuantity(${item.id})">+</button>
+                                </div>
+                                <button onclick="removeItem(${item.id})" style="background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 1.2rem;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        `;
+                        
+                        cartItemsContainer.appendChild(cartItem);
+                    });
+                }
+            }
+        }
+
+        // Funções para manipular quantidade
+        function decreaseQuantity(productId) {
+            const item = cart.find(item => item.id === productId);
+            
+            if (item.quantity > 1) {
+                item.quantity -= 1;
+            } else {
+                cart = cart.filter(item => item.id !== productId);
+            }
+            
+            updateCart();
+        }
+
+        function increaseQuantity(productId) {
+            const item = cart.find(item => item.id === productId);
+            item.quantity += 1;
+            updateCart();
+        }
+
+        function removeItem(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCart();
+        }
+
+        // Funções para modais
+        function openCartModal() {
+            cartModal.style.display = 'flex';
+        }
+
+        function openCheckoutModal() {
+            if (cart.length === 0) {
+                showNotification('Seu carrinho está vazio!');
+                return;
+            }
+            cartModal.style.display = 'none';
+            checkoutModal.style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Fechar modal ao clicar fora
+        window.addEventListener('click', (e) => {
+            if (e.target === cartModal) {
+                cartModal.style.display = 'none';
+            }
+            if (e.target === checkoutModal) {
+                checkoutModal.style.display = 'none';
+            }
+        });
+
+        // Função para mostrar notificação
+        function showNotification(message) {
+            // Remove notificação existente se houver
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <i class="fas fa-check-circle" style="margin-right: 0.5rem;"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('fade-out');
+                setTimeout(() => {
+                    notification.remove();
+                }, 500);
+            }, 3000);
+        }
+
+        // Finalizar orçamento
+        checkoutForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            if (cart.length === 0) {
+                showNotification('Seu carrinho está vazio!');
+                return;
+            }
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                address: document.getElementById('address').value,
+                payment: document.getElementById('payment').value,
+                items: cart,
+                total: cart.reduce((total, item) => total + (item.price * item.quantity), 0)
+            };
+            
+        // Criar mensagem para WhatsApp
+            const createWhatsAppMessage = (data) => {
+                let message = `🛒 *NOVO ORÇAMENTO*\n\n`;
+                message += `👤 *Cliente:* ${data.name}\n`;
+                message += `📧 *Email:* ${data.email}\n`;
+                message += `📍 *Endereço:* ${data.address}\n`;
+                message += `💳 *Pagamento:* ${data.payment}\n\n`;
+                message += `🛍️ *Itens do pedido:*\n`;
+        
+                data.items.forEach(item => {
+                    message += `• ${item.name} - Qtd: ${item.quantity} - R$ ${(item.price * item.quantity).toFixed(2)}\n`;
+                });
+        
+                message += `\n💰 *Total: R$ ${data.total.toFixed(2)}*`;
+        
+                return encodeURIComponent(message);
+            };
+    
+        // Número do WhatsApp (substitua pelo seu número)
+        const whatsappNumber = '5521985778195'; // Formato: código do país + DDD + número
+    
+        // Criar URL do WhatsApp
+        const whatsappMessage = createWhatsAppMessage(formData);
+        const whatsappURL = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+    
+        // Simulação de processamento (opcional)
+        console.log('Dados da compra:', formData);
+    
+        // Redirecionar para WhatsApp
+        setTimeout(() => {
+            showNotification('🎉 Redirecionando para WhatsApp para finalizar o pedido!');
+        
+        // Abrir WhatsApp
+        window.open(whatsappURL, '_blank');
+        
+        // Limpar carrinho após enviar
+        cart = [];
+        updateCart();
+        closeModal('checkout-modal');
+        checkoutForm.reset();
+    }, 1000);
+});
+
+// Inicializa a loja
+document.addEventListener('DOMContentLoaded', () => {
+    filterByCategory('todos'); // Carrega todos os produtos inicialmente
+    updateCart();
+});
+    </script>
+</body>
+</html>
